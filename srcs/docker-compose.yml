@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  mariadb:
+    build:
+      context: .
+      dockerfile: srcs/requirements/mariadb/Dockerfile
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+      - ./requirements/mariadb/conf:/etc/mysql/conf.d
+    expose:
+      - "3306"
+    networks:
+      - intra
+
+  nginx:
+    build:
+      context: .
+      dockerfile: srcs/requirements/nginx/Dockerfile
+    volumes:
+      - ./requirements/nginx/conf:/etc/nginx/conf.d
+    ports:
+      - "443:443"
+    networks:
+      - intra
+
+  wordpress:
+    build:
+      context: .
+      dockerfile: srcs/requirements/wordpress/Dockerfile
+    depends_on:
+      - mariadb
+    environment:
+      - WORDPRESS_DB_HOST=mariadb
+      - WORDPRESS_DB_USER=${MYSQL_USER}
+      - WORDPRESS_DB_PASSWORD=${MYSQL_PASSWORD}
+      - WORDPRESS_DB_NAME=${MYSQL_DATABASE}
+    expose:
+      - "9000"
+    networks:
+      - intra
+
+networks:
+  intra:
+    driver: bridge
