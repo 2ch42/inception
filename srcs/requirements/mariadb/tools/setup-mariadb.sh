@@ -1,21 +1,13 @@
 #!/bin/bash
+mysql_install_db --user=root
 
-# Set root password using ALTER USER
-mysql -u root <<EOF
-ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
+echo "CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};
 FLUSH PRIVILEGES;
-EOF
-
-# Configure MariaDB
-mysql -u root -p"${MYSQL_ROOT_PASSWORD}" <<EOF
-DELETE FROM mysql.user WHERE User ='${MYSQL_USER}';
-DELETE FROM mysql.db WHERE User ='${MYSQL_USER}';
-FLUSH PRIVILEGES;
+USE ${MYSQL_DATABASE};
 CREATE USER '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
-CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};
-GRANT ALL PRIVILEGES ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
+GRANT ALL PRIVILEGES ON * TO '${MYSQL_USER}'@'%' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
-EOF
+ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';" > sql
 
-# Start MariaDB
-exec mysqld --user=root
+mysqld -uroot --bootstrap < sql
+mysqld -uroot
