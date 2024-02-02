@@ -3,41 +3,51 @@ version: '3'
 services:
   mariadb:
     build:
-      context: .
-      dockerfile: requirements/mariadb/Dockerfile
+      context: requirements/mariadb
+      dockerfile: Dockerfile
     env_file:
       - .env
-    volumes:
-      - /home/changhyl/data:/etc/mysql/conf.d
     expose:
       - "3306"
-    networks:
-      - intra
-
-  nginx:
-    build:
-      context: .
-      dockerfile: requirements/nginx/Dockerfile
+    restart: always
     volumes:
-      - /home/changhyl/data:/etc/nginx/conf.d
-    ports:
-      - "443:443"
+      - /Users/changhyl/data:/var/lib/mysql
     networks:
       - intra
 
-  wordpress:
-    build:
-      context: .
-      dockerfile: requirements/wordpress/Dockerfile
-    depends_on:
-      - mariadb
-    env_file:
-      - .env
-    expose:
-      - "9000"
-    networks:
-      - intra
+
+  # nginx:
+  #   build:
+  #     context: .
+  #     dockerfile: requirements/nginx/Dockerfile
+  #   volumes:
+  #     - /home/changhyl/data:/etc/nginx/conf.d
+  #   ports:
+  #     - "443:443"
+  #   networks:
+  #     - intra
+
+  # wordpress:
+  #   build:
+  #     context: .
+  #     dockerfile: requirements/wordpress/Dockerfile
+  #   depends_on:
+  #     - mariadb
+  #   env_file:
+  #     - .env
+  #   expose:
+  #     - "9000"
+  #   networks:
+  #     - intra
 
 networks:
   intra:
     driver: bridge
+
+# volumes:
+  # name: 
+  # driver: local
+  # doriver0-opt:
+    # type: none
+    # o: bind
+    # device: path
