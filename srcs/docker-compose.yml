@@ -2,6 +2,7 @@ version: '3'
 
 services:
   mariadb:
+    init: true
     build:
       context: requirements/mariadb
       dockerfile: Dockerfile
@@ -11,21 +12,9 @@ services:
       - "3306"
     restart: always
     volumes:
-      - /Users/changhyl/data:/var/lib/mysql
+      - db_volumes:/var/lib/mysql
     networks:
       - intra
-
-
-  # nginx:
-  #   build:
-  #     context: .
-  #     dockerfile: requirements/nginx/Dockerfile
-  #   volumes:
-  #     - /home/changhyl/data:/etc/nginx/conf.d
-  #   ports:
-  #     - "443:443"
-  #   networks:
-  #     - intra
 
   # wordpress:
   #   build:
@@ -40,14 +29,33 @@ services:
   #   networks:
   #     - intra
 
+  # nginx:
+  #   build:
+  #     context: .
+  #     dockerfile: requirements/nginx/Dockerfile
+  #   volumes:
+  #     - /home/changhyl/data:/etc/nginx/conf.d
+  #   ports:
+  #     - "443:443"
+  #   networks:
+  #     - intra
+
 networks:
   intra:
     driver: bridge
 
-# volumes:
-  # name: 
-  # driver: local
-  # doriver0-opt:
-    # type: none
-    # o: bind
-    # device: path
+volumes:
+  db_volumes:
+    name: db_volumes
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /Users/changhyl/data/db/
+  wp_volumes:
+    name: dp_volumes
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /Users/changhyl/data/wp/
