@@ -17,6 +17,8 @@ services:
       - intra
 
   wordpress:
+    volumes:
+      - wp_volumes:/var/www/html/wordpress
     build:
       context: requirements/wordpress
       dockerfile: Dockerfile
@@ -27,8 +29,6 @@ services:
       - .env
     expose:
       - "9000"
-    volumes:
-      - wp_volumes:/var/www/html/wordpress
     networks:
       - intra
 

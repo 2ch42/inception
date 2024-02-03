@@ -1,5 +1,7 @@
 FROM debian:11
 
+VOLUME /var/www/html/wordpress
+
 RUN apt-get update -y && \
     apt-get upgrade -y && \
     apt-get -y install mariadb-client \
@@ -13,10 +15,11 @@ RUN apt-get update -y && \
     php-xml \
     sendmail
 
+RUN wget https://wordpress.org/latest.tar.gz && \
+    tar -xvf latest.tar.gz
+
 COPY tools/setup-wordpress.sh /usr/local/bin/
-COPY conf/my.cnf /usr/local/bin/
-RUN chmod +x /usr/local/bin/setup-wordpress.sh
+RUN chmod +x /usr/local/bin/setup-wordpress.sh && \
+    mv /wordpress/wp-config-sample.php /wordpress/wp-config.php
 
-VOLUME /var/www/html/wordpress
-
-ENTRYPOINT ["/usr/local/bin/setup-wordpress.sh"]
+CMD ["/usr/local/bin/setup-wordpress.sh"]
