@@ -32,16 +32,19 @@ services:
     networks:
       - intra
 
-  # nginx:
-  #   build:
-  #     context: .
-  #     dockerfile: requirements/nginx/Dockerfile
-  #   volumes:
-  #     - /home/changhyl/data:/etc/nginx/conf.d
-  #   ports:
-  #     - "443:443"
-  #   networks:
-  #     - intra
+  nginx:
+    build:
+      context: requirements/nginx
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - wp_volumes:/var/www/html/wordpress
+    depends_on:
+      - wordpress
+    ports:
+      - "443:443"
+    networks:
+      - intra
 
 networks:
   intra:
