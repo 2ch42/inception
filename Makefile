@@ -6,8 +6,10 @@ build:
 	mkdir -p /Users/changhyl/data/wp
 	docker-compose -f $(SRC) build
 up:
-	docker-compose -f $(SRC) up -d
+	docker-compose -f $(SRC) up
 down:
 	docker-compose -f $(SRC) down
 clean:
 	docker-compose -f $(SRC) down -v
+
+.PHONY: build up down clean

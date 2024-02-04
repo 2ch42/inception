@@ -14,4 +14,4 @@ RUN chmod +x /usr/local/bin/setup-mariadb.sh
 
 VOLUME /var/lib/mysql
 
-CMD ["/usr/local/bin/setup-mariadb.sh"]
+ENTRYPOINT ["/usr/local/bin/setup-mariadb.sh"]

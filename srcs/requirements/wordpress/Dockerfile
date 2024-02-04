@@ -22,4 +22,4 @@ COPY tools/setup-wordpress.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/setup-wordpress.sh && \
     mv /wordpress/wp-config-sample.php /wordpress/wp-config.php
 
-CMD ["/usr/local/bin/setup-wordpress.sh"]
+ENTRYPOINT ["/usr/local/bin/setup-wordpress.sh"]

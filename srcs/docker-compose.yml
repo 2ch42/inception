@@ -10,19 +10,21 @@ services:
       - .env
     expose:
       - "3306"
-    restart: always
+    restart: on-failure
     volumes:
       - db_volumes:/var/lib/mysql
     networks:
-      - intra
+      - docker-network
 
   wordpress:
     volumes:
       - wp_volumes:/var/www/html/wordpress
+    env_file:
+      - .env
     build:
       context: requirements/wordpress
       dockerfile: Dockerfile
-    restart: always
+    restart: on-failure
     depends_on:
       - mariadb
     env_file:
@@ -30,13 +32,15 @@ services:
     expose:
       - "9000"
     networks:
-      - intra
+      - docker-network
 
   nginx:
+    env_file:
+      - .env
     build:
       context: requirements/nginx
       dockerfile: Dockerfile
-    restart: always
+    restart: on-failure
     volumes:
       - wp_volumes:/var/www/html/wordpress
     depends_on:
@@ -44,10 +48,10 @@ services:
     ports:
       - "443:443"
     networks:
-      - intra
+      - docker-network
 
 networks:
-  intra:
+  docker-network:
     driver: bridge
 
 volumes:
