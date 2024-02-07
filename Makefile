@@ -23,4 +23,4 @@ clean:
 	rm -rf $(WP)
 	docker system prune --volumes -f --all
 
-.PHONY: vol build up down clean
+.PHONY: all vol build up down clean
