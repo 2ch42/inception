@@ -11,8 +11,9 @@ up:
 	make build
 	docker-compose -f $(SRC) up
 down:
+	docker-compose -f $(SRC) down
+clean:
 	docker-compose -f $(SRC) down -v
-clean: down
 	rm -rf $(DB)
 	rm -rf $(WP)
 	docker system prune -f --all
