@@ -1,22 +1,26 @@
 SRC=srcs/docker-compose.yml
+DATA=/Users/changhyl/data
 DB=/Users/changhyl/data/db
 WP=/Users/changhyl/data/wp
 
-build:
-	mkdir -p /Users/changhyl/data
-	mkdir -p /Users/changhyl/data/db
-	mkdir -p /Users/changhyl/data/wp
+all: up
+
+vol:
+	mkdir -p DATA
+	mkdir -p DB
+	mkdir -p WP
+
+build: vol
 	docker-compose -f $(SRC) build
-up:
-	make build
-	docker-compose -f $(SRC) up
+
+up: vol
+	docker-compose -f $(SRC) up -d --build
 down:
 	docker-compose -f $(SRC) down
 clean:
 	docker-compose -f $(SRC) down -v
 	rm -rf $(DB)
 	rm -rf $(WP)
-	docker system prune -f --all
-	@docker volume rm -f $$(docker volume ls -q)
+	docker system prune --volumes -f --all
 
-.PHONY: build up down clean
+.PHONY: vol build up down clean
