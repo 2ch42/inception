@@ -6,9 +6,9 @@ WP=/Users/changhyl/data/wp
 all: up
 
 vol:
-	mkdir -p DATA
-	mkdir -p DB
-	mkdir -p WP
+	mkdir -p $(DATA)
+	mkdir -p $(DB)
+	mkdir -p $(WP)
 
 build: vol
 	docker-compose -f $(SRC) build
