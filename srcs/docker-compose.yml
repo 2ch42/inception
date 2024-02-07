@@ -3,32 +3,26 @@ version: '3'
 services:
   mariadb:
     init: true
-    build:
-      context: requirements/mariadb
-      dockerfile: Dockerfile
+    build: requirements/mariadb
     env_file:
       - .env
     expose:
       - "3306"
-    restart: on-failure
+    restart: always
     volumes:
-      - db_volumes:/var/lib/mysql
+      - dp_vol:/var/lib/mysql
     networks:
       - docker-network
 
   wordpress:
     volumes:
-      - wp_volumes:/var/www/html/wordpress
+      - wp_vol:/var/www/html/wordpress
     env_file:
       - .env
-    build:
-      context: requirements/wordpress
-      dockerfile: Dockerfile
-    restart: on-failure
+    build: requirements/wordpress
+    restart: always
     depends_on:
       - mariadb
-    env_file:
-      - .env
     expose:
       - "9000"
     networks:
@@ -37,12 +31,10 @@ services:
   nginx:
     env_file:
       - .env
-    build:
-      context: requirements/nginx
-      dockerfile: Dockerfile
-    restart: on-failure
+    build: requirements/nginx
+    restart: always
     volumes:
-      - wp_volumes:/var/www/html/wordpress
+      - wp_vol:/var/www/html/wordpress
     depends_on:
       - wordpress
     ports:
@@ -55,15 +47,15 @@ networks:
     driver: bridge
 
 volumes:
-  db_volumes:
-    name: db_volumes
+  dp_vol:
+    name: dp_vol
     driver: local
     driver_opts:
       type: none
       o: bind
       device: /Users/changhyl/data/db/
-  wp_volumes:
-    name: wp_volumes
+  wp_vol:
+    name: wp_vol
     driver: local
     driver_opts:
       type: none
